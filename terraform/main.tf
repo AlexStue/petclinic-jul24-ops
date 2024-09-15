@@ -24,7 +24,7 @@ resource "null_resource" "apply_k8s_deployment" {
   provisioner "local-exec" {
     command = <<-EOT
       echo "Applying Kubernetes deployment"
-      kubectl apply -f /home/ubuntu/petclinic-jul24-ops/k3s/nginx-combined.yml
+      kubectl apply -f /home/ubuntu/petclinic-jul24-ops/k3s/petclinic-combined.yml
     EOT
   }
 

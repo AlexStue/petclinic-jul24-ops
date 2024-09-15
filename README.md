@@ -4,6 +4,10 @@ For CI/CD OPS-Path
 -----------------
 HowTo:
 
+
+-----------------
+Status:
+
 Repo DEV: https://github.com/AlexStue/petclinic-jul24-dev.git
 - App: Petclinic -> .jar File
 + Dockerfile needed: Implementation pending
@@ -31,3 +35,7 @@ Protocol:
 ausstehend: 
 - Wie wird Terraform gestartet? Über GitHub Actions? 
 - Wie löst man das mit der privat-key-Datei für die SSH Verbindung?
+
+2024.09.15: 
+- Petclinic-app-image in DEV-Repo erstellt und image auf DockerHub gepushed
+- Petclinic-app anstatt nginx eingesetzt
