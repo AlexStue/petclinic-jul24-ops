@@ -14,3 +14,9 @@ variable "ssh_private_key" {
   type        = string
   default     = "./path/to/id_rsa"
 }
+
+variable "example_variable" {
+  description = "An example variable"
+  type        = string
+  default     = "default_value"
+}

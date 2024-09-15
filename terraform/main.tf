@@ -1,24 +1,32 @@
-resource "null_resource" "install_k3s" {
-  provisioner "remote-exec" {
-    connection {
-      type        = "ssh"
-      host        = var.server_ip
-      user        = var.ssh_user
-      private_key = file(var.ssh_private_key)
-    }
+provider "local" {}
 
-    inline = [
-      # Update and install necessary dependencies
-      "sudo apt-get update -y",
-      "sudo apt-get install -y curl",
+resource "null_resource" "k3s_setup" {
+  provisioner "local-exec" {
+    command = <<-EOT
+      echo "Provisioning local Ubuntu machine"
+      sudo apt-get update
+      sudo apt-get install -y curl
+      curl -sfL https://get.k3s.io | sh -
+      mkdir -p ~/.kube
+      sudo cp /etc/rancher/k3s/k3s.yaml ~/.kube/config
+      sudo chown $USER:$USER ~/.kube/config
+      sudo chmod 644 ~/.kube/config
+      sudo chmod 644 /etc/rancher/k3s/k3s.yaml
+    EOT
+  }
 
-      # Install K3s (with local etcd database)
-      "curl -sfL https://get.k3s.io | sh -"
-    ]
+  triggers = {
+    always_run = "${timestamp()}"
   }
 }
 
-resource "kubectl_manifest" "nginx_deployment" {
-  yaml_body = file("/home/ubuntu/k3s/nginx-combined.yml")
-}
+resource "null_resource" "apply_k8s_deployment" {
+  provisioner "local-exec" {
+    command = <<-EOT
+      echo "Applying Kubernetes deployment"
+      kubectl apply -f /home/ubuntu/petclinic-jul24-ops/k3s/nginx-combined.yml
+    EOT
+  }
 
+  depends_on = [null_resource.k3s_setup]
+}
