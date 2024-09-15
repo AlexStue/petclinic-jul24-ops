@@ -17,10 +17,6 @@ spec:
         image: alexstue/jul24-petclinic:1.0
         ports:
         - containerPort: 80
-        volumeMounts:
-        - name: custom-content
-          mountPath: /usr/share/petclinic/html/index.html
-          subPath: index.html
 ---
 apiVersion: v1
 kind: Service
@@ -35,4 +31,3 @@ spec:
       port: 80
       targetPort: 80
       nodePort: 30002
----
