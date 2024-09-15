@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.19.10
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: custom-content
+          mountPath: /usr/share/nginx/html/index.html
+          subPath: index.html
+      volumes:
+      - name: custom-content
+        configMap:
+          name: nginx-custom-content
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-custom-content
+data:
+  index.html: |
+    <h2 style="color: #2e6c80;">Wellcome to the Jun24 Project :)</h2>
+    <p>This page is to build and test our CI/CD pipeline.</p>
+    <h3 style="color: #2e6c80;"><span style="color: #003300;">Structure k3s:</span></h3>
+    <ul>
+    <li><span style="color: #000000;">Deployment Nginx-Image</span></li>
+    <li><span style="color: #000000;">ConfigMap with static html content</span></li>
+    <li><span style="color: #000000;">Service as NodePort</span></li>
+    </ul>
+    <h3 style="color: #2e6c80;"><span style="color: #003300;">Structure terraform:</span></h3>
+    <ul>
+    <li>this is to test a variable from tf. Content is: tba;</li>
+    </ul>
+    <p>&nbsp;</p>
+    <p><strong>New stuff incoming! Stay tuned.</strong></p>
+    <p><strong>&nbsp;</strong></p>
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  selector:
+    app: nginx
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      nodePort: 30001
+---
