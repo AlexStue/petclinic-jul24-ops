@@ -1,0 +1,66 @@
+name: Terraform and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Check out the code from the repository
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Step 2: Set up Terraform using the official Terraform GitHub Action
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.5.0  # Specify the version of Terraform you need
+
+    # Step 3: Initialize Terraform
+    - name: Terraform Init
+      run: terraform init
+
+    # Step 4: Extract server IP using Terraform output
+    - name: Extract Server IP
+      id: get_ip
+      run: |
+        server_ip=$(terraform output -raw server_ip_tf) # Replace with your Terraform output variable name
+        echo "SERVER_IP=$server_ip" >> $GITHUB_ENV
+
+    # Step 5: Set up SSH with the private key
+    - name: Set up SSH
+      run: |
+        mkdir -p ~/.ssh
+        echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H ${{ env.SERVER_IP }} >> ~/.ssh/known_hosts
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_DTS_PRIVATE_KEY }}
+
+    # Step 6: Deploy code via SSH
+    - name: Deploy code via SSH
+      run: |
+        ssh ubuntu@${{ env.SERVER_IP }} "
+#### write code
+        # install terraform on server
+        curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+        sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com focal main"
+        sudo apt-get update
+        sudo apt-get install terraform
+        # clone git ops-repo
+        git clone https://github.com/AlexStue/petclinic-jul24-ops.git
+        # start terraform & k3s & petclinic-app
+        cd /home/ubuntu/petclinic-jul24-ops/terraform
+        terraform init
+        terraform plan
+        terraform apply -auto-approve
+        # wait a view minutes and open in browser: http://<DTS-IP>:30002
+        #cd /path/to/your/app &&
+        #git pull origin main &&
+        #systemctl restart your-app-service
+####
+        "
