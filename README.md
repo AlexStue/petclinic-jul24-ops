@@ -4,6 +4,8 @@ For CI/CD OPS-Path
 -----------------
 HowTo:
 
+# Update DTS-Server-IP
+open the Repo to change the Server-IP inside the "/terraform/variables.tf" file and push/pull/OrWhatever
 # install terraform
 curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
 sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com focal main"
@@ -25,9 +27,9 @@ Repo DEV: https://github.com/AlexStue/petclinic-jul24-dev.git
 - App: Petclinic -> .jar File
 + Dockerfile needed: Implementation done
 + Dockerimage to DockerHub: Implementation done
-+ Dockerhub image -> to OPS-Path done: alexstue/jul24-petclinic:1.0
++ Dockerhub image -> to OPS-Path done: alexstue/jul24-petclinic:latest
 
-+ GitHub Action ?
++ GitHub Action: First Draft available but not testet. DRAFT.
 
 Repo OPS: https://github.com/AlexStue/petclinic-jul24-ops.git
 - hi
@@ -46,9 +48,9 @@ Protocol:
 - Webserver mit individueller Seite ist nach Terraform apply unter http://<DTS-IP>:30001 erreichbar
 
 ausstehend: 
-- Wie wird Terraform gestartet? Über GitHub Actions? 
-- Wie löst man das mit der privat-key-Datei für die SSH Verbindung?
+- Wie wird Terraform gestartet? Über GitHub Actions? -> Yes inside GitHubActions
+- Wie löst man das mit der privat-key-Datei für die SSH Verbindung? -> Secret in GitHub
 
 2024.09.15: 
 - Petclinic-app-image in DEV-Repo erstellt und image auf DockerHub gepushed
-- Petclinic-app anstatt nginx eingesetzt
+- Petclinic-app plus nginx Server via NodePort. Nginx is to test variables and changes with custom html-page.
