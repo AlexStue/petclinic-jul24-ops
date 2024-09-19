@@ -1,8 +1,4 @@
-output "k3s_server_ip" {
+output "server_ip_tf" {
   value = var.server_ip
-  description = "The IP address of the K3s server."
-}
-
-output "example_variable_output" {
-  value = var.example_variable
+  description = "The IP address of the DTS server."
 }
