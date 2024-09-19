@@ -28,17 +28,19 @@ jobs:
     - name: Extract Server IP
       id: get_ip
       run: |
-        server_ip=$(terraform output -raw server_ip_tf || echo "ERROR") # Default to "ERROR" if command fails
-        if [ "$server_ip" = "ERROR" ]; then
-          echo "Error extracting server IP" 
-          exit 1
-        fi
-        echo "Extracted server IP: $server_ip" # Debug statement
-        echo "SERVER_IP=$server_ip" >> $GITHUB_ENV
+        grep -A 3 -E '^variable "server_ip_tf"' variables.tf | grep 'default' | sed -n 's/.*default *= *"\([^"]*\)".*/\1/p' > extracted_value.txt
+        cat extracted_value.txt
+      #   server_ip=$(terraform output -raw server_ip_tf || echo "ERROR") # Default to "ERROR" if command fails
+      #   if [ "$server_ip" = "ERROR" ]; then
+      #     echo "Error extracting server IP" 
+      #     exit 1
+      #   fi
+      #   echo "Extracted server IP: $server_ip" # Debug statement
+      #   echo "SERVER_IP=$server_ip" >> $GITHUB_ENV
 
-    # Debug environment variable
-    - name: Debug Environment Variables
-      run: cat $GITHUB_ENV
+    # # Debug environment variable
+    # - name: Debug Environment Variables
+    #   run: cat $GITHUB_ENV
 
     # # Step 5: Set up SSH with the private key
     # - name: Set up SSH
