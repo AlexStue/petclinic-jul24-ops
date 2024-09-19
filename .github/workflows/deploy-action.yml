@@ -28,7 +28,7 @@ jobs:
     - name: Extract Server IP
       id: get_ip
       run: |
-        grep -A 3 -E '^variable "server_ip_tf"' /terraform/variables.tf | grep 'default' | sed -n 's/.*default *= *"\([^"]*\)".*/\1/p' > extracted_value.txt
+        grep -A 3 -E '^variable "server_ip_tf"' terraform/variables.tf | grep 'default' | sed -n 's/.*default *= *"\([^"]*\)".*/\1/p' > extracted_value.txt
         cat extracted_value.txt
       #   server_ip=$(terraform output -raw server_ip_tf || echo "ERROR") # Default to "ERROR" if command fails
       #   if [ "$server_ip" = "ERROR" ]; then
