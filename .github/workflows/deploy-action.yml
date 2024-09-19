@@ -37,27 +37,18 @@ jobs:
         mkdir -p ~/.ssh
         echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan -H ${{ env.server_ip }} >> ~/.ssh/known_hosts
+        ssh-keyscan -H ${{ env.SERVER_IP }} >> ~/.ssh/known_hosts
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_DTS_PRIVATE_KEY }}
 
-    # Step 6: Deploy code via SSH
+    # Step 6: Deploy code via SSH from "scripts/deploy-on-dts.sh" script
     - name: Deploy code via SSH
-      run: |
-        ssh ubuntu@${{ env.server_ip }}"
-#### write code
-        # install terraform on server
-        curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-        sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com focal main"
-        sudo apt-get update
-        sudo apt-get install terraform
-        # clone git ops-repo
-        git clone https://github.com/AlexStue/petclinic-jul24-ops.git
-        # start terraform & k3s & petclinic-app
-        cd /home/ubuntu/petclinic-jul24-ops/terraform
-        terraform init
-        terraform plan
-        terraform apply -auto-approve
-        # wait a view minutes and open in browser: http://<DTS-IP>:30002
-####
-        "
+    run: |
+      # Copy the deploy.sh script from the repository to the remote server
+      scp -o StrictHostKeyChecking=no scripts/deploy-on-dts ubuntu@${{ env.SERVER_IP }}:/home/ubuntu/
+  
+      # SSH into the server and execute the deploy.sh script
+      ssh -o StrictHostKeyChecking=no ubuntu@${{ env.SERVER_IP }} "
+        chmod +x /home/ubuntu/deploy-on-dts.sh && /home/ubuntu/deploy-on-dts.sh
+      "
+      
