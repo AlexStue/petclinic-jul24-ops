@@ -1,5 +1,5 @@
 name: Deploy lates images on DTS via Terraform apply
-# DRAFT. GHActions DTS-Server rollout
+
 on:
   push:
     branches:

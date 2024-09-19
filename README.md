@@ -2,38 +2,18 @@
 For CI/CD OPS-Path
 
 -----------------
-HowTo:
-
-# Update DTS-Server-IP
-open the Repo to change the Server-IP inside the "/terraform/variables.tf" file and push/pull/OrWhatever
-# install terraform
-curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com focal main"
-sudo apt-get update
-sudo apt-get install terraform
-# clone git ops-repo
-git clone https://github.com/AlexStue/petclinic-jul24-ops.git
-# start terraform & k3s & petclinic-app
-cd /home/ubuntu/petclinic-jul24-ops/terraform
-terraform init
-terraform plan
-terraform apply -auto-approve
-# wait a view minutes and open in browser: http://<DTS-IP>:30002
-
------------------
-Status:
-
-Repo DEV: https://github.com/AlexStue/petclinic-jul24-dev.git
-- App: Petclinic -> .jar File
-+ Dockerfile needed: Implementation done
-+ Dockerimage to DockerHub: Implementation done
-+ Dockerhub image -> to OPS-Path done: alexstue/jul24-petclinic:latest
-
-+ GitHub Action: First Draft available but not testet. DRAFT.
+HowTo: 
 
 Repo OPS: https://github.com/AlexStue/petclinic-jul24-ops.git
-- hi
-+ hi
+- open the Repo to change the Server-IP inside the "/terraform/variables.tf" file and commit+push
+- a runner will be started and deploys the app on the DTS-Server
+- Wait a view minutes and open in browser: http://<DTS-IP>:30002
+
+Repo DEV: https://github.com/AlexStue/petclinic-jul24-dev.git
++ Dockerfile: Implementation done
++ Dockerimage to DockerHub: Implementation done
++ GitHub Action: Biuld and upload: Implementation and testing done.
++ Dockerhub image -> alexstue/jul24-petclinic:latest
 
 -----------------
 Protocol:
@@ -54,3 +34,15 @@ ausstehend:
 2024.09.15: 
 - Petclinic-app-image in DEV-Repo erstellt und image auf DockerHub gepushed
 - Petclinic-app plus nginx Server via NodePort. Nginx is to test variables and changes with custom html-page.
+
+2024.09.19:
+- A GitHub-Action is now implemented and tested.
+- If you change the IP of the DTS-Server in terraform/variables.tf and commit, the runner will be started
+- The runner of “deploy-action.yml” will:
+    - extract IP out of terraform/variables.tf
+    - set up SSH to DTS-Server
+    - copy and run the script “scripts/deploy-on-dts.sh”. The script does on the server:
+        - update and install terraform
+        - clone or update the OPS-repo
+        - terraform apply
+        - -> petclinic app is online ( at the moment via NodePort. Implementation via ingress and impl. of databases and else is pending -> under topic of terraform and k3s)
