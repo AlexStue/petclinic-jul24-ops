@@ -42,13 +42,13 @@ jobs:
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_DTS_PRIVATE_KEY }}
 
-    # # Step 6: Deploy code via SSH from "scripts/deploy-on-dts.sh" script
-    # - name: Deploy code via SSH
-    #   run: |
-    #     # Copy the deploy.sh script from the repository to the remote server
-    #     scp -o StrictHostKeyChecking=no scripts/deploy-on-dts ubuntu@${{ env.SERVER_IP }}:/home/ubuntu/
+    # Step 6: Deploy code via SSH from "scripts/deploy-on-dts.sh" script
+    - name: Deploy code via SSH
+      run: |
+        # Copy the deploy.sh script from the repository to the remote server
+        scp -o StrictHostKeyChecking=no scripts/deploy-on-dts ubuntu@${{ env.SERVER_IP }}:/home/ubuntu/
     
-    #     # SSH into the server and execute the deploy.sh script
-    #     ssh -o StrictHostKeyChecking=no ubuntu@${{ env.SERVER_IP }} "
-    #       chmod +x /home/ubuntu/deploy-on-dts.sh && /home/ubuntu/deploy-on-dts.sh
-    #     "
+        # SSH into the server and execute the deploy.sh script
+        ssh -o StrictHostKeyChecking=no ubuntu@${{ env.SERVER_IP }} "
+          chmod +x /home/ubuntu/deploy-on-dts.sh && /home/ubuntu/deploy-on-dts.sh
+        "
