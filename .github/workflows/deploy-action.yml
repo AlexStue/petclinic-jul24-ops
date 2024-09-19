@@ -49,7 +49,7 @@ jobs:
     - name: Copy script to server
       run: |
         echo "Copy script to server with IP: ${SERVER_IP}"
-        scp -o StrictHostKeyChecking=no scripts/deploy-on-dts ubuntu@${{ steps.extract_ip.outputs.server_ip }}:/home/ubuntu/
+        scp -o StrictHostKeyChecking=no scripts/deploy-on-dts.sh ubuntu@${{ steps.extract_ip.outputs.server_ip }}:/home/ubuntu/
 
     - name: Run script via SSH
       run: |
