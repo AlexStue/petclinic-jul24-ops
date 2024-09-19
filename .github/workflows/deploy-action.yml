@@ -28,7 +28,12 @@ jobs:
     - name: Extract Server IP
       id: get_ip
       run: |
-        server_ip=$(terraform output -raw server_ip_tf) # Replace with your Terraform output variable name
+        server_ip=$(terraform output -raw server_ip_tf || echo "ERROR") # Default to "ERROR" if command fails
+        if [ "$server_ip" = "ERROR" ]; then
+          echo "Error extracting server IP" 
+          exit 1
+        fi
+        echo "Extracted server IP: $server_ip" # Debug statement
         echo "SERVER_IP=$server_ip" >> $GITHUB_ENV
 
     # Step 5: Set up SSH with the private key
@@ -51,4 +56,3 @@ jobs:
         ssh -o StrictHostKeyChecking=no ubuntu@${{ env.SERVER_IP }} "
           chmod +x /home/ubuntu/deploy-on-dts.sh && /home/ubuntu/deploy-on-dts.sh
         "
-      
