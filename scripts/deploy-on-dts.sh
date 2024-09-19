@@ -4,15 +4,37 @@
 # Enable error handling: the script will exit on any command failure
 set -e
 
+# Function to handle apt-get lock
+handle_lock() {
+  local lock_file=$1
+  local retries=10
+  local wait_time=10  # in seconds
+
+  while [ $retries -gt 0 ]; do
+    if sudo lsof $lock_file; then
+      echo "Lock file $lock_file is held by another process. Retrying in $wait_time seconds..."
+      sleep $wait_time
+      retries=$((retries - 1))
+    else
+      return 0
+    fi
+  done
+
+  echo "Failed to acquire lock after multiple retries. Exiting."
+  exit 1
+}
+
 # Step 1: Install Terraform on the remote server
 curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
 sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com focal main"
+
+# Handle apt-get lock
+handle_lock "/var/lib/dpkg/lock-frontend"
+
 sudo apt-get update
 sudo apt-get install -y terraform
 
 # Step 2: Clone the repository containing the Terraform code
-#git clone https://github.com/AlexStue/petclinic-jul24-ops.git
-
 REPO_URL="https://github.com/AlexStue/petclinic-jul24-ops.git"
 DIR_NAME="petclinic-jul24-ops"
 
