@@ -24,33 +24,23 @@ jobs:
     - name: Terraform Init
       run: terraform init
 
-    # Step 4: Extract server IP using Terraform output
+    # Step 4: Extract the server IP and set it as an output
     - name: Extract Server IP
-      id: get_ip
+      id: extract_ip
       run: |
-        grep -A 3 -E '^variable "server_ip_tf"' terraform/variables.tf | grep 'default' | sed -n 's/.*default *= *"\([^"]*\)".*/\1/p' > extracted_value.txt
-        cat extracted_value.txt
-      #   server_ip=$(terraform output -raw server_ip_tf || echo "ERROR") # Default to "ERROR" if command fails
-      #   if [ "$server_ip" = "ERROR" ]; then
-      #     echo "Error extracting server IP" 
-      #     exit 1
-      #   fi
-      #   echo "Extracted server IP: $server_ip" # Debug statement
-      #   echo "SERVER_IP=$server_ip" >> $GITHUB_ENV
-
-    # # Debug environment variable
-    # - name: Debug Environment Variables
-    #   run: cat $GITHUB_ENV
-
-    # # Step 5: Set up SSH with the private key
-    # - name: Set up SSH
-    #   run: |
-    #     mkdir -p ~/.ssh
-    #     echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-    #     chmod 600 ~/.ssh/id_rsa
-    #     ssh-keyscan -H ${{ env.SERVER_IP }} >> ~/.ssh/known_hosts
-    #   env:
-    #     SSH_PRIVATE_KEY: ${{ secrets.SSH_DTS_PRIVATE_KEY }}
+        SERVER_IP=$(grep -A 3 -E '^variable "server_ip_tf"' terraform/variables.tf | grep 'default' | sed -n 's/.*default *= *"\([^"]*\)".*/\1/p')
+        echo "SERVER_IP=${SERVER_IP}"
+        echo "##[set-output name=server_ip;]${SERVER_IP}"
+    
+    # Step 5: Set up SSH with the private key
+    - name: Set up SSH
+      run: |
+        mkdir -p ~/.ssh
+        echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H ${{ steps.extract_ip.outputs.server_ip }} >> ~/.ssh/known_hosts
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_DTS_PRIVATE_KEY }}
 
     # # Step 6: Deploy code via SSH from "scripts/deploy-on-dts.sh" script
     # - name: Deploy code via SSH
