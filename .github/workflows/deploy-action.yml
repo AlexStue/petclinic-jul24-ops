@@ -14,15 +14,15 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # Step 2: Set up Terraform using the official Terraform GitHub Action
-    - name: Set up Terraform
-      uses: hashicorp/setup-terraform@v2
-      with:
-        terraform_version: 1.5.0  # Specify the version of Terraform you need
+    # # Step 2: Set up Terraform using the official Terraform GitHub Action
+    # - name: Set up Terraform
+    #   uses: hashicorp/setup-terraform@v2
+    #   with:
+    #     terraform_version: 1.5.0  # Specify the version of Terraform you need
 
-    # Step 3: Initialize Terraform
-    - name: Terraform Init
-      run: terraform init
+    # # Step 3: Initialize Terraform
+    # - name: Terraform Init
+    #   run: terraform init
 
     # Step 4: Extract the server IP and set it as an output
     - name: Extract Server IP
@@ -31,24 +31,40 @@ jobs:
         SERVER_IP=$(grep -A 3 -E '^variable "server_ip_tf"' terraform/variables.tf | grep 'default' | sed -n 's/.*default *= *"\([^"]*\)".*/\1/p')
         echo "SERVER_IP=${SERVER_IP}"
         echo "##[set-output name=server_ip;]${SERVER_IP}"
+        echo "Extracted Server IP: ${SERVER_IP}"
     
     # Step 5: Set up SSH with the private key
-    - name: Set up SSH
+    - name: Set up SSH with private-key
       run: |
         mkdir -p ~/.ssh
         echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -H ${{ steps.extract_ip.outputs.server_ip }} >> ~/.ssh/known_hosts
+        echo "Server IP is: ${{ steps.extract_ip.outputs.server_ip }}"
+        echo "Known hosts:"
+        cat ~/.ssh/known_hosts
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_DTS_PRIVATE_KEY }}
 
-    # Step 6: Deploy code via SSH from "scripts/deploy-on-dts.sh" script
-    - name: Deploy code via SSH
+    - name: Copy script to server
       run: |
-        # Copy the deploy.sh script from the repository to the remote server
-        scp -o StrictHostKeyChecking=no scripts/deploy-on-dts ubuntu@${SERVER_IP}:/home/ubuntu/
+        echo "Copy script to server with IP: ${SERVER_IP}"
+        scp -o StrictHostKeyChecking=no scripts/deploy-on-dts ubuntu@${{ steps.extract_ip.outputs.server_ip }}:/home/ubuntu/
+
+    - name: Run script via SSH
+      run: |
+        echo "Deploying to server with IP: ${SERVER_IP}"
+        ssh -o StrictHostKeyChecking=no ubuntu@${SERVER_IP}
+        chmod +x /home/ubuntu/deploy-on-dts.sh
+        /home/ubuntu/deploy-on-dts.sh
+
+    # # Step 6: Deploy code via SSH from "scripts/deploy-on-dts.sh" script
+    # - name: Deploy code via SSH
+    #   run: |
+    #     # Copy the deploy.sh script from the repository to the remote server
+    #     scp -o StrictHostKeyChecking=no scripts/deploy-on-dts ubuntu@${SERVER_IP}:/home/ubuntu/
     
-        # # SSH into the server and execute the deploy.sh script
-        # ssh -o StrictHostKeyChecking=no ubuntu@${SERVER_IP} "
-        #   chmod +x /home/ubuntu/deploy-on-dts.sh && /home/ubuntu/deploy-on-dts.sh
-        "
+    #     # # SSH into the server and execute the deploy.sh script
+    #     # ssh -o StrictHostKeyChecking=no ubuntu@${SERVER_IP} "
+    #     #   chmod +x /home/ubuntu/deploy-on-dts.sh && /home/ubuntu/deploy-on-dts.sh
+    #     "
