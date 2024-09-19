@@ -24,35 +24,39 @@ jobs:
     - name: Terraform Init
       run: terraform init
 
-    # Step 4: Extract server IP using Terraform output
-    - name: Extract Server IP
-      id: get_ip
-      run: |
-        server_ip=$(terraform output -raw server_ip_tf || echo "ERROR") # Default to "ERROR" if command fails
-        if [ "$server_ip" = "ERROR" ]; then
-          echo "Error extracting server IP" 
-          exit 1
-        fi
-        echo "Extracted server IP: $server_ip" # Debug statement
-        echo "SERVER_IP=$server_ip" >> $GITHUB_ENV
+    # # Step 4: Extract server IP using Terraform output
+    # - name: Extract Server IP
+    #   id: get_ip
+    #   run: |
+    #     server_ip=$(terraform output -raw server_ip_tf || echo "ERROR") # Default to "ERROR" if command fails
+    #     if [ "$server_ip" = "ERROR" ]; then
+    #       echo "Error extracting server IP" 
+    #       exit 1
+    #     fi
+    #     echo "Extracted server IP: $server_ip" # Debug statement
+    #     echo "SERVER_IP=$server_ip" >> $GITHUB_ENV
 
-    # Step 5: Set up SSH with the private key
-    - name: Set up SSH
-      run: |
-        mkdir -p ~/.ssh
-        echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan -H ${{ env.SERVER_IP }} >> ~/.ssh/known_hosts
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_DTS_PRIVATE_KEY }}
+    # # Debug environment variable
+    # - name: Debug Environment Variables
+    #   run: cat $GITHUB_ENV
 
-    # Step 6: Deploy code via SSH from "scripts/deploy-on-dts.sh" script
-    - name: Deploy code via SSH
-      run: |
-        # Copy the deploy.sh script from the repository to the remote server
-        scp -o StrictHostKeyChecking=no scripts/deploy-on-dts ubuntu@${{ env.SERVER_IP }}:/home/ubuntu/
-      
-        # SSH into the server and execute the deploy.sh script
-        ssh -o StrictHostKeyChecking=no ubuntu@${{ env.SERVER_IP }} "
-          chmod +x /home/ubuntu/deploy-on-dts.sh && /home/ubuntu/deploy-on-dts.sh
-        "
+    # # Step 5: Set up SSH with the private key
+    # - name: Set up SSH
+    #   run: |
+    #     mkdir -p ~/.ssh
+    #     echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+    #     chmod 600 ~/.ssh/id_rsa
+    #     ssh-keyscan -H ${{ env.SERVER_IP }} >> ~/.ssh/known_hosts
+    #   env:
+    #     SSH_PRIVATE_KEY: ${{ secrets.SSH_DTS_PRIVATE_KEY }}
+
+    # # Step 6: Deploy code via SSH from "scripts/deploy-on-dts.sh" script
+    # - name: Deploy code via SSH
+    #   run: |
+    #     # Copy the deploy.sh script from the repository to the remote server
+    #     scp -o StrictHostKeyChecking=no scripts/deploy-on-dts ubuntu@${{ env.SERVER_IP }}:/home/ubuntu/
+    
+    #     # SSH into the server and execute the deploy.sh script
+    #     ssh -o StrictHostKeyChecking=no ubuntu@${{ env.SERVER_IP }} "
+    #       chmod +x /home/ubuntu/deploy-on-dts.sh && /home/ubuntu/deploy-on-dts.sh
+    #     "
