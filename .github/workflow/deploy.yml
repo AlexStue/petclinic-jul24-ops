@@ -1,5 +1,5 @@
-name: Terraform and Deploy
-
+name: Terraform and Deploy on DTS
+# DRAFT. GHActions DTS-Server rollout
 on:
   push:
     branches:
@@ -37,14 +37,14 @@ jobs:
         mkdir -p ~/.ssh
         echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan -H ${{ env.SERVER_IP }} >> ~/.ssh/known_hosts
+        ssh-keyscan -H ${{ env.server_ip }} >> ~/.ssh/known_hosts
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_DTS_PRIVATE_KEY }}
 
     # Step 6: Deploy code via SSH
     - name: Deploy code via SSH
       run: |
-        ssh ubuntu@${{ env.SERVER_IP }} "
+        ssh ubuntu@${{ env.server_ip }}"
 #### write code
         # install terraform on server
         curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
@@ -59,8 +59,5 @@ jobs:
         terraform plan
         terraform apply -auto-approve
         # wait a view minutes and open in browser: http://<DTS-IP>:30002
-        #cd /path/to/your/app &&
-        #git pull origin main &&
-        #systemctl restart your-app-service
 ####
         "
