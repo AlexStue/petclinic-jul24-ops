@@ -38,7 +38,7 @@ data:
     <ul>
     <li><span style="color: #000000;">Deployment Nginx-Image</span></li>
     <li><span style="color: #000000;">ConfigMap with static html content</span></li>
-    <li><span style="color: #000000;">Service as NodePort</span></li>
+    <li><span style="color: #000000;">Service as LoadBalancer</span></li>
     </ul>
     <h3 style="color: #2e6c80;"><span style="color: #003300;">Structure terraform:</span></h3>
     <ul>
@@ -55,7 +55,7 @@ metadata:
 spec:
   selector:
     app: nginx
-  type: NodePort
+  type: LoadBalancer
   ports:
     - protocol: TCP
       port: 80
