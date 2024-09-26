@@ -52,7 +52,7 @@ else
 fi
 
 # Step 3: Navigate to the Terraform directory and deploy infrastructure
-cd "$DIR_NAME/terraform"
+cd /home/ubuntu/petclinic-jul24-ops/terraform
 echo "Initializing Terraform..."
 terraform init
 echo "Planning Terraform deployment..."
@@ -61,3 +61,4 @@ echo "Applying Terraform deployment..."
 terraform apply -auto-approve
 
 echo "Deployment completed successfully."
+repositories
