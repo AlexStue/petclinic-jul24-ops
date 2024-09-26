@@ -50,8 +50,4 @@ ausstehend:
 29.09.26:
 - NodePort now changed to LoadBalancer with replicas:2
 - webserver still accesible under http://<DTS-IP>:30001 erreichbar
-
-        
-29.09.26:
-- NodePort now changed to LoadBalancer with replicas:2
-- webserver still accesible under http://<DTS-IP>:30001 erreichbar
+- trying let's encrypt, not running jet
