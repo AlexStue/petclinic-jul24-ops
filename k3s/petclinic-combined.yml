@@ -25,7 +25,7 @@ metadata:
 spec:
   selector:
     app: petclinic
-  type: nodePort
+  type: NodePort
   ports:
     - protocol: TCP
       port: 8080
