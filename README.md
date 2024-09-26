@@ -46,6 +46,11 @@ ausstehend:
         - clone or update the OPS-repo
         - terraform apply
         - -> petclinic app is online ( at the moment via NodePort. Implementation via ingress and impl. of databases and else is pending -> under topic of terraform and k3s)
+
+29.09.26:
+- NodePort now changed to LoadBalancer with replicas:2
+- webserver still accesible under http://<DTS-IP>:30001 erreichbar
+
         
 29.09.26:
 - NodePort now changed to LoadBalancer with replicas:2
