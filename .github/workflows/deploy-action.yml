@@ -1,4 +1,4 @@
-name: Deploy lates images on DTS via Terraform apply
+name: Deploy latest images on DSTServer via Terraform apply
 
 on:
   push:
