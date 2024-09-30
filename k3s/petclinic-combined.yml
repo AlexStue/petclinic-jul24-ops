@@ -39,6 +39,7 @@ metadata:
     # You can add annotations for specific Ingress controllers here
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
+  ingressClassName: nginx
   rules:
   - host: petclinic-jul24.ph-rustingheart.dns-dynamic.net  # Change this to your actual domain
     http:
