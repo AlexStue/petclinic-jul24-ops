@@ -35,6 +35,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: petclinic-ingress
+  namespace: default
   annotations:
     # You can add annotations for specific Ingress controllers here
     nginx.ingress.kubernetes.io/rewrite-target: /
