@@ -40,7 +40,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: petclinic-jul24.ph-rustingheart.dns-dynamic.net  # Replace with your domain
+  - host: petclinic.ph-rustingheart.dns-dynamic.net  # Replace with your domain
     http:
       paths:
       - path: /

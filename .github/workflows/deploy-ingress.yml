@@ -1,0 +1,17 @@
+#!/bin/bash
+
+set -e
+
+echo "Deploying NGINX Ingress Controller..."
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
+
+# kubectl get pods -n ingress-nginx
+echo "Waiting for NGINX Ingress Controller pods to be in 'Running' state..."
+while true; do
+    runningPods=$(kubectl get pods -n ingress-nginx --field-selector=status.phase=Running | wc -l)
+    if [[ $runningPods -gt 1 ]]; then
+        echo "NGINX Ingress Controller pods are running."
+        break
+    fi
+    sleep 5
+done

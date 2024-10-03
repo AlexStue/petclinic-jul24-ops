@@ -6,7 +6,7 @@ metadata:
 spec:
   acme:
     # server URL for the Let's Encrypt production environment
-    server: https://petclinic-jul24.ph-rustingheart.dns-dynamic.net
+    server: https://petclinic.ph-rustingheart.dns-dynamic.net
     # email address used for registration
     email: hierzi.p@gmail.com
     # name of a secret used to store the ACME account private key

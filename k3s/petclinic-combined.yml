@@ -25,11 +25,12 @@ metadata:
 spec:
   selector:
     app: petclinic
-  type: ClusterIP # Use ClusterIP as the type for Ingress
+  type: LoadBalancer # Use ClusterIP ? as the type for Ingress
   ports:
     - protocol: TCP
       port: 8080
       targetPort: 8080
+      nodePort:35010
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -42,7 +43,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: petclinic-jul24.ph-rustingheart.dns-dynamic.net  # Change this to your actual domain
+  - host: petclinic.ph-rustingheart.dns-dynamic.net  # Change this to your actual domain
     http:
       paths:
       - path: /

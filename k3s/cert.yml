@@ -1,14 +1,14 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: cert-manager
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: cert-manager
-  namespace: cert-manager
----
+# apiVersion: v1
+# kind: Namespace
+# metadata:
+#   name: cert-manager
+# ---
+# apiVersion: v1
+# kind: ServiceAccount
+# metadata:
+#   name: cert-manager
+#   namespace: cert-manager
+# ---
 # Create the necessary roles and bindings
 # Add additional roles and bindings as necessary
 # Deployment and other resources here
