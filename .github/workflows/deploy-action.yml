@@ -1,4 +1,4 @@
-name: Deploy latest images on DSTServer via Terraform apply
+name: Deploy latest images on DST Server via Terraform apply
 
 on:
   push:

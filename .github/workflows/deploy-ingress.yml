@@ -1,17 +1,29 @@
-#!/bin/bash
+name: Deploy NGINX Ingress Controller
 
-set -e
+on:
+  push:
+    branches:
+      - main
 
-echo "Deploying NGINX Ingress Controller..."
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
 
-# kubectl get pods -n ingress-nginx
-echo "Waiting for NGINX Ingress Controller pods to be in 'Running' state..."
-while true; do
-    runningPods=$(kubectl get pods -n ingress-nginx --field-selector=status.phase=Running | wc -l)
-    if [[ $runningPods -gt 1 ]]; then
-        echo "NGINX Ingress Controller pods are running."
-        break
-    fi
-    sleep 5
-done
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Deploy NGINX Ingress Controller
+        run: |
+          echo "Deploying NGINX Ingress Controller..."
+          kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
+
+          echo "Waiting for NGINX Ingress Controller pods to be in 'Running' state..."
+          while true; do
+              runningPods=$(kubectl get pods -n ingress-nginx --field-selector=status.phase=Running | wc -l)
+              if [[ $runningPods -gt 1 ]]; then
+                  echo "NGINX Ingress Controller pods are running."
+                  break
+              fi
+              sleep 5
+          done
