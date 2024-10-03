@@ -16,7 +16,7 @@ jobs:
       - name: Deploy NGINX Ingress Controller
         run: |
           echo "Deploying NGINX Ingress Controller..."
-          kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
+          kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml  --validate=false
 
           echo "Waiting for NGINX Ingress Controller pods to be in 'Running' state..."
           while true; do
