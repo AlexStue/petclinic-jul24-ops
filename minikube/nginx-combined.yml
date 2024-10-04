@@ -35,7 +35,7 @@ kind: Ingress
 metadata:
   name: petclinic-ingress
   namespace: default
-    annotations:
+  annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   ingressClassName: nginx

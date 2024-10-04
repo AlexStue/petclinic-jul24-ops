@@ -12,7 +12,7 @@ curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-
 sudo install minikube-linux-amd64 /usr/local/bin/minikube
 
 echo "Starting Minikube"
-minikube start --driver=virtualbox
+minikube start
 
 echo "Configuring kubectl"
 # Install kubectl
