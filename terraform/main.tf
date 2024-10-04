@@ -2,7 +2,8 @@ provider "local" {}
 
 resource "null_resource" "make_scripts_executable" {
   provisioner "local-exec" {
-    command = "chmod +x ~/petclinic-jul24-ops/scripts/install_k3s_mkube.sh"
+command = "chmod +x ~/petclinic-jul24-ops/scripts/install_minikube.sh"
+  #  command = "chmod +x ~/petclinic-jul24-ops/scripts/install_k3s.sh"
   }
 
   triggers = {
@@ -35,7 +36,7 @@ resource "null_resource" "k3s_setup" {
 
 resource "null_resource" "apply_k3s_deployment" {
   provisioner "local-exec" {
-    command = "bash ~/petclinic-jul24-ops/scripts/deploy_minkube.sh"
+    command = "bash ~/petclinic-jul24-ops/scripts/deploy_k3s_app_mkube.sh"
   #  command = "bash ~/petclinic-jul24-ops/scripts/deploy_k3s_app.sh"
   }
 
@@ -54,6 +55,6 @@ resource "null_resource" "run_script" {
   }
 
   # Specify dependencies if the script needs to run after previous resources
-depends_on = [null_resource.apply_k3s_deployment]
+depends_on = [null_resource.apply_minikube_deployment]
 #  depends_on = [null_resource.apply_k3s_deployment]
 }
