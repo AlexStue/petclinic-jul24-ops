@@ -43,7 +43,7 @@ spec:
   ingressClassName: nginx
   tls: 
   - hosts:
-    petclinic-ingress.ph-rustingheart.dns.dynamic.net
+    - petclinic.ph-rustingheart.dns.dynamic.net
     secretName: petclinic-secret-tls
   rules:
   - host: petclinic-ingress.ph-rustingheart.dns-dynamic.net
