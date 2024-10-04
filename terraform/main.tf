@@ -21,8 +21,8 @@ command = "chmod +x ~/petclinic-jul24-ops/scripts/deploy_minikube_app.sh"
     always_run = "${timestamp()}"
   }
 }
-
-resource "null_resource" "k3s_setup" {
+resource "null_resource" "minikube_setup" {
+# resource "null_resource" "k3s_setup" {
   provisioner "local-exec" {
     command = "bash ~/petclinic-jul24-ops/scripts/install_minikube.sh"
   #  command = "bash ~/petclinic-jul24-ops/scripts/install_k3s.sh"
@@ -35,7 +35,8 @@ resource "null_resource" "k3s_setup" {
   }
 }
 
-resource "null_resource" "apply_k3s_deployment" {
+resource "null_resource" "apply_minikube_deployment" {
+# resource "null_resource" "apply_k3s_deployment" {
   provisioner "local-exec" {
     command = "bash ~/petclinic-jul24-ops/scripts/deploy_minikube_app.sh"
   #  command = "bash ~/petclinic-jul24-ops/scripts/deploy_k3s_app.sh"
