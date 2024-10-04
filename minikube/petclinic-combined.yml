@@ -41,8 +41,12 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   ingressClassName: nginx
+  tls: 
+  - hosts:
+    petclinic-ingress.ph-rustingheart.dns.dynamic.net
+    secretName: petclinic-secret-tls
   rules:
-  - host: petclinic.ph-rustingheart.dns-dynamic.net
+  - host: petclinic-ingress.ph-rustingheart.dns-dynamic.net
     http:
       paths:
       - path: /
