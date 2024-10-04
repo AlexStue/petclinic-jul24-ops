@@ -1,5 +1,5 @@
 variable "server_ip_tf" {
-  description = "Public IP of the Ubuntu server where K3s will be installed."
+  description = "Public IP of the Ubuntu server where K3s or MiniKube will be installed."
   default     = "52.16.155.59"
 }
 

@@ -2,7 +2,7 @@ provider "local" {}
 
 resource "null_resource" "make_scripts_executable" {
   provisioner "local-exec" {
-    command = "chmod +x ~/petclinic-jul24-ops/scripts/install_k3s.sh"
+    command = "chmod +x ~/petclinic-jul24-ops/scripts/install_k3s_mkube.sh"
   }
 
   triggers = {
@@ -12,7 +12,7 @@ resource "null_resource" "make_scripts_executable" {
 
 resource "null_resource" "make_app_script_executable" {
   provisioner "local-exec" {
-    command = "chmod +x ~/petclinic-jul24-ops/scripts/deploy_k3s_app.sh"
+    command = "chmod +x ~/petclinic-jul24-ops/scripts/deploy_k3s_app_mkube.sh"
   }
 
   triggers = {
@@ -22,7 +22,8 @@ resource "null_resource" "make_app_script_executable" {
 
 resource "null_resource" "k3s_setup" {
   provisioner "local-exec" {
-    command = "bash ~/petclinic-jul24-ops/scripts/install_k3s.sh"
+    command = "bash ~/petclinic-jul24-ops/scripts/install_minikube.sh"
+  #  command = "bash ~/petclinic-jul24-ops/scripts/install_k3s.sh"
   }
 
   depends_on = [null_resource.make_scripts_executable]
@@ -34,7 +35,8 @@ resource "null_resource" "k3s_setup" {
 
 resource "null_resource" "apply_k3s_deployment" {
   provisioner "local-exec" {
-    command = "bash ~/petclinic-jul24-ops/scripts/deploy_k3s_app.sh"
+    command = "bash ~/petclinic-jul24-ops/scripts/deploy_minkube.sh"
+  #  command = "bash ~/petclinic-jul24-ops/scripts/deploy_k3s_app.sh"
   }
 
   depends_on = [null_resource.make_app_script_executable, null_resource.k3s_setup]
@@ -42,6 +44,7 @@ resource "null_resource" "apply_k3s_deployment" {
 
 resource "null_resource" "run_script" {
   provisioner "local-exec" {
+  
     command = "bash ~/petclinic-jul24-ops/scripts/deploy-on-dts.sh"  # Replace with the actual path to your_script.sh
   }
   
@@ -51,5 +54,6 @@ resource "null_resource" "run_script" {
   }
 
   # Specify dependencies if the script needs to run after previous resources
-  depends_on = [null_resource.apply_k3s_deployment]
+depends_on = [null_resource.apply_k3s_deployment]
+#  depends_on = [null_resource.apply_k3s_deployment]
 }
