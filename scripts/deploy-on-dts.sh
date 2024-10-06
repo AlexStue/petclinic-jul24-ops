@@ -4,20 +4,17 @@
 # Enable error handling: the script will exit on any command failure
 set -e
 
-# Function to handle apt-get lock
+# Function to handle apt-get locks
 handle_lock() {
-  local lock_file=$1
   local retries=10
   local wait_time=10  # in seconds
 
-  while [ $retries -gt 0 ]; do
-    if sudo lsof $lock_file &> /dev/null; then
-      echo "Lock file $lock_file is held by another process. Retrying in $wait_time seconds..."
-      sleep $wait_time
-      retries=$((retries - 1))
-    else
-      return 0 # No lock detected
+  for ((i=0; i<retries; i++)); do
+    if ! sudo lsof /var/lib/dpkg/lock-frontend &> /dev/null; then
+      return 0 # No lock detected; proceed
     fi
+    echo "Lock file /var/lib/dpkg/lock-frontend is held by another process. Retrying in $wait_time seconds..."
+    sleep $wait_time
   done
 
   echo "Failed to acquire lock after multiple retries. Exiting."
@@ -27,14 +24,27 @@ handle_lock() {
 # Step 1: Install Terraform on the remote server
 echo "Adding HashiCorp GPG key..."
 curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+
 echo "Adding HashiCorp repository..."
 sudo apt-add-repository -y "deb [arch=amd64] https://apt.releases.hashicorp.com focal main"
 
 # Handle apt-get lock
-handle_lock "/var/lib/dpkg/lock-frontend"
+handle_lock
 
-echo "Updating package lists..."
-sudo apt-get update -qq # The -qq flag suppresses output (quiet mode)
+# Retry the update command
+for i in {1..5}; do
+  echo "Updating package lists..."
+  if sudo apt-get update -qq; then
+    break
+  elif [ "$i" -lt 5 ]; then
+    echo "Failed to update package list. Retrying in 10 seconds..."
+    sleep 10
+  else
+    echo "Failed to update package list after multiple attempts. Exiting."
+    exit 1
+  fi
+done
+
 echo "Installing Terraform..."
 sudo apt-get install -y terraform
 
@@ -48,7 +58,6 @@ if [ -d "$DIR_NAME" ]; then
   cd "$DIR_NAME" || exit
   # Fetch the latest changes without merging and discard them
   git fetch origin main
-  # Reset to the latest version on the remote, discarding local changes
   git reset --hard origin/main
 else
   echo "Directory $DIR_NAME does not exist. Cloning the repository..."
