@@ -50,7 +50,7 @@ resource "null_resource" "apply_k3s_deployment" {
 
 resource "null_resource" "run_script" {
   provisioner "local-exec" {
-    command = "bash ~/petclinic-jul24-ops/scripts/deploy-on-dst.sh"  # Replace with the actual path to your_script.sh
+    command = "bash ~/petclinic-jul24-ops/scripts/deploy-on-dts.sh"  # Replace with the actual path to your_script.sh
   }
   
   # optionally use triggers if you want to force rerun
