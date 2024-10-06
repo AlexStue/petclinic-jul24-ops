@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: petclinic-deployment
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: petclinic
@@ -31,28 +31,3 @@ spec:
       port: 8080
       targetPort: 8080
       nodePort: 30001
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: petclinic-ingress
-  namespace: default
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
-spec:
-  ingressClassName: nginx
-  tls: 
-  - hosts:
-    - petclinic.ph-rustingheart.dns.dynamic.net
-    secretName: petclinic-secret-tls
-  rules:
-  - host: petclinic-ingress.ph-rustingheart.dns-dynamic.net
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: petclinic-service
-            port:
-              number: 8080
