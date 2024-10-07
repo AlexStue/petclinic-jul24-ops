@@ -48,7 +48,7 @@ resource "null_resource" "run_script" {
     command = <<EOT
       for i in {1..10}; do
         if ! fuser /var/lib/dpkg/lock-frontend; then
-          bash ~/petclinic-jul24-ops/scripts/deploy-on-dst.sh
+          bash ~/petclinic-jul24-ops/scripts/deploy-on-dts.sh
           exit 0
         else
           echo "Lock held, waiting..."

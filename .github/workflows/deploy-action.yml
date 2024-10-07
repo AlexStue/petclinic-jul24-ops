@@ -46,6 +46,6 @@ jobs:
         SERVER_IP=${{ steps.extract_ip.outputs.server_ip }}
         echo "Deploying to server with IP: $SERVER_IP"
         ssh -o StrictHostKeyChecking=no ubuntu@$SERVER_IP << 'EOF'
-          chmod +x /home/ubuntu/deploy-on-dst.sh
-          /home/ubuntu/deploy-on-dst.sh
+          chmod +x /home/ubuntu/deploy-on-dts.sh
+          /home/ubuntu/deploy-on-dts.sh
         EOF
