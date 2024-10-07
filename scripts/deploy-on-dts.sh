@@ -77,7 +77,7 @@ terraform init
   terraform plan
 
   echo "Applying Terraform deployment..."
-  terraform apply -auto-approve
+  TF_LOG=DEBUG terraform apply -auto-approve
 } || {
   echo "Encountered an error during the Terraform operation, possibly due to state lock."
   echo "Consider unlocking the state or waiting for other operations to finish."

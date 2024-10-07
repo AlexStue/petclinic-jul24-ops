@@ -47,7 +47,24 @@ ausstehend:
         - terraform apply
         - -> petclinic app is online ( at the moment via NodePort. Implementation via ingress and impl. of databases and else is pending -> under topic of terraform and k3s)
 
-29.09.26:
+29.09.24:
 - NodePort now changed to LoadBalancer with replicas:2
 - webserver still accesible under http://<DTS-IP>:30001 erreichbar
 - trying let's encrypt, not running jet
+
+07.10.24
+- terraform:
+  - updated main.tf
+- scripts:
+  - updated install k3s + deploy k3s files
+- k3s:
+  - added ingress-traefik.yml
+  - added tls-secret.yml
+- minikube:
+  - tried and added with ingress-nginx but back to k3s!!
+  - deleted in commits again since we dont use it anymore
+
+
+
+---- when error Processes are runnning in /lock files or other you can: 
+sudo apt autoremove ??
