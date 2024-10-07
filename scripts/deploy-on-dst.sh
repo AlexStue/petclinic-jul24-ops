@@ -56,7 +56,6 @@ DIR_NAME="petclinic-jul24-ops"
 if [ -d "$DIR_NAME" ]; then
   echo "Directory $DIR_NAME already exists. Checking for updates..."
   cd "$DIR_NAME" || exit
-  # Fetch the latest changes without merging and discard them
   git fetch origin main
   git reset --hard origin/main
 else
@@ -80,7 +79,7 @@ terraform init
   TF_LOG=DEBUG terraform apply -auto-approve
 } || {
   echo "Encountered an error during the Terraform operation, possibly due to state lock."
-  echo "Consider unlocking the state or waiting for other operations to finish."
+  echo "If the lock persists, consider running 'terraform force-unlock'."
   exit 1
 }
 

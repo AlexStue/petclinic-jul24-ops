@@ -45,10 +45,20 @@ resource "null_resource" "apply_k3s_deployment" {
 
 resource "null_resource" "run_script" {
   provisioner "local-exec" {
-    command = "bash ~/petclinic-jul24-ops/scripts/deploy-on-dts.sh"  
+    command = <<EOT
+      for i in {1..10}; do
+        if ! fuser /var/lib/dpkg/lock-frontend; then
+          bash ~/petclinic-jul24-ops/scripts/deploy-on-dst.sh
+          exit 0
+        else
+          echo "Lock held, waiting..."
+          sleep 10
+        fi
+      done
+      echo "Failed to acquire lock after retries."
+      exit 1
+    EOT
   }
-  
-  # optionally use triggers if you want to force rerun
   triggers = {
     always_run = timestamp()
   }
