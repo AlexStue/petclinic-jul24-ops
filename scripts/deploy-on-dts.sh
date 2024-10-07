@@ -11,7 +11,7 @@ handle_lock() {
   local wait_time=10  # in seconds
 
   while [ $retries -gt 0 ]; do
-    if sudo lsof $lock_file; then
+    if sudo lsof "$lock_file"; then
       echo "Lock file $lock_file is held by another process. Retrying in $wait_time seconds..."
       sleep $wait_time
       retries=$((retries - 1))

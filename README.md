@@ -64,7 +64,29 @@ ausstehend:
   - tried and added with ingress-nginx but back to k3s!!
   - deleted in commits again since we dont use it anymore
 
+07.10.24
+- back to old structure but added loadbalancer and ingress:
+- k3s:
+  - added a traefik-ingress.yml
+  - ingress running on: 
+    - http://petclinic.ph-rustingheart.dns-dynamic.net:30840/
+  - loadbalancer running on: 
+    - http://52.16.155.59:30001/
+- trying tls now 
+
+still sometimes errors: with lockfiles if they show up i#ll do this:
+sudo rm /var/lib/apt/lists/lock
+sudo rm /var/cache/apt/archives/lock
+sudo rm /var/lib/dpkg/lock-frontend
+sudo apt autoremove
+sudo dpkg --configure -a
+
+if .ssh key errors show up:
+- i will delete the know_hosts 
+sudo nano ~/.ssh/known_hosts
+crtl +k # as much as needed 
+crtl + x
+y
 
 
----- when error Processes are runnning in /lock files or other you can: 
-sudo apt autoremove ??
+
