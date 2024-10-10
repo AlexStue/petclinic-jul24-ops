@@ -1,9 +1,26 @@
-apiVersion: traefik.containo.us/v1alpha1
-kind: Middleware
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
-  name: redirect-to-https
+  name: petclinic-ingress
   namespace: default
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+    traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
+    traefik.ingress.kubernetes.io/tls: "true"  # Enabling TLS
+    traefik.ingress.kubernetes.io/tls.secret: "my-tls-secret"  # Referencing your existing TLS secret
 spec:
-  redirectScheme:
-    scheme: https
-    permanent: true
+  tls:
+  - hosts:
+    - petclinic.ph-rustingheart.dns-dynamic.net
+    secretName: petclinic-secret-tls  # Name of the TLS secret
+  rules:
+  - host: petclinic.ph-rustingheart.dns-dynamic.net
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: petclinic-service
+            port:
+              number: 8080
