@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: mysql
-  namespace: dev
+  namespace: default
 spec:
   serviceName: mysql
   replicas: 1
@@ -54,7 +54,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: mysql
-  namespace: dev
+  namespace: default
 spec:
   ports:
   - port: 3306
@@ -66,7 +66,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: mysql-pvc
-  namespace: dev
+  namespace: default
 spec:
   accessModes:
   - ReadWriteOnce

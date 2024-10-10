@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: petclinic-deployment
-  namespace: dev
+  namespace: default
 spec:
   replicas: 2
   selector:

@@ -2,7 +2,7 @@ apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
   name: redirect-to-https
-  namespace: dev
+  namespace: default
 spec:
   redirectScheme:
     scheme: https
@@ -12,7 +12,7 @@ apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
   name: letsencrypt-prod
-  namespace: cert-manager # Ensure you configure this namespace properly
+  namespace: default # Ensure you configure this namespace properly
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
@@ -28,7 +28,7 @@ kind: Certificate
 apiVersion: cert-manager.io/v1
 metadata:
   name: petclinic-cert
-  namespace: dev
+  namespace: default
 spec:
   secretName: petclinic-secret-tls
   issuerRef:

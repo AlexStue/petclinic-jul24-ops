@@ -2,7 +2,7 @@
 # kind: Ingress
 # metadata:
 #   name: dashboard-ingress
-#   namespace: dev
+#   namespace: default
 # spec:
 #   rules:
 #   - host: dashboard.ph-rustingheart.dns-dynamic.net
