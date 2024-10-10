@@ -1,28 +1,40 @@
-# apiVersion: networking.k8s.io/v1beta1
-# kind: Ingress
-# metadata:
-#   name: dashboard-ingress
-#   namespace: default
-# spec:
-#   rules:
-#   - host: dashboard.ph-rustingheart.dns-dynamic.net
-#     http: 
-#     paths:
-#     - backend:
-#       service:
-#         name: dahboard
-#         port: 80
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata: 
-#   name: default-http-backend
-# spec:
-#   selector:
-#     app: default-response-app
-#   ports:
-#   - protocol: TCP
-#     port: 80
-#     targetPort: 8080
-# 
-# 
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: redirect-to-https
+  namespace: default
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: true
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: letsencrypt-prod
+  namespace: default # Ensure you configure this namespace properly
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: hierzi.p@gmail.com # Replace with your email for Let's Encrypt notifications
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    solvers:
+    - http01:
+        ingress:
+          class: traefik
+---
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: petclinic-cert
+  namespace: default
+spec:
+  secretName: petclinic-secret-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: Issuer
+  commonName: petclinic.ph-rustingheart.dns-dynamic.net # Your domain
+  dnsNames:
+    - petclinic.ph-rustingheart.dns-dynamic.net
+    - www.petclinic.ph-rustingheart.dns-dynamic.net

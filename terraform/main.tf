@@ -25,8 +25,8 @@ resource "null_resource" "apply_k3s_deployment" {
     command = <<-EOT
       echo "Applying Kubernetes deployment"
       kubectl apply -f /home/ubuntu/petclinic-jul24-ops/k3s/ingress/petclinic-combined+.yml
-      kubectl apply -f /home/ubuntu/petclinic-jul24-ops/k3s/ingress/tls-secret.yml
       kubectl apply -f /home/ubuntu/petclinic-jul24-ops/k3s/ingress/ingress-traefik.yml
+      kubectl apply -f /home/ubuntu/petclinic-jul24-ops/k3s/ingress/dashboard-ingress.yml
       kubectl apply -f /home/ubuntu/petclinic-jul24-ops/k3s/db/db-secret.yml
       kubectl apply -f /home/ubuntu/petclinic-jul24-ops/k3s/db/db-msql.yml
 
