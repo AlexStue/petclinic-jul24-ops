@@ -25,8 +25,10 @@ resource "null_resource" "apply_k3s_deployment" {
     command = <<-EOT
       echo "Applying Kubernetes deployment"
       kubectl apply -f /home/ubuntu/petclinic-jul24-ops/k3s/default/petclinic-combined.yml
-      kubectl apply -f /home/ubuntu/petclinic-jul24-ops/k3s/ingress/ingress-traefik.yml
+      kubectl create deploy rancher --image=ruanbekker/logos:rancher --replicas=2
+      kubectl expose deploy rancher --port=8080 --type=ClusterIP
       kubectl apply -f /home/ubuntu/petclinic-jul24-ops/k3s/ingress/tls-secret.yml
+      kubectl apply -f /home/ubuntu/petclinic-jul24-ops/k3s/ingress/ingress-traefik.yml
       kubectl apply -f /home/ubuntu/petclinic-jul24-ops/k3s/db/db-secret.yml
       kubectl apply -f /home/ubuntu/petclinic-jul24-ops/k3s/db/db-msql.yml
 

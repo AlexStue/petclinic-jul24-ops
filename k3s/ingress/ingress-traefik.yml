@@ -1,24 +1,40 @@
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
 metadata:
-  name: petclinic-ingress
-  namespace: default
-  annotations:
-    kubernetes.io/ingress.class: traefik
-    traefik.ingress.kubernetes.io/tls: "true"  # Enabling TLS
+  name: redirect-to-https
+  namespace: dev
 spec:
-  tls:
-  - hosts:
+  redirectScheme:
+    scheme: https
+    permanent: true
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: letsencrypt-prod
+  namespace: cert-manager # Ensure you configure this namespace properly
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: hierzi.p@gmail.com # Replace with your email for Let's Encrypt notifications
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    solvers:
+    - http01:
+        ingress:
+          class: traefik
+---
+kind: Certificate
+apiVersion: cert-manager.io/v1
+metadata:
+  name: petclinic-cert
+  namespace: dev
+spec:
+  secretName: petclinic-secret-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: Issuer
+  commonName: petclinic.ph-rustingheart.dns-dynamic.net # Your domain
+  dnsNames:
     - petclinic.ph-rustingheart.dns-dynamic.net
-    secretName: petclinic-tls-secret  # Name of the TLS secret
-  rules:
-  - host: petclinic.ph-rustingheart.dns-dynamic.net
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: petclinic-service
-            port:
-              number: 8080
+    - www.petclinic.ph-rustingheart.dns-dynamic.net

@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: petclinic-ingress
+  namespace: dev
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/tls: "true"  # Enabling TLS
+spec:
+  tls:
+  - hosts:
+    - petclinic.ph-rustingheart.dns-dynamic.net
+    secretName: petclinic-secret-tls  # Name of the TLS secret
+  rules:
+  - host: petclinic.ph-rustingheart.dns-dynamic.net
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: petclinic-service
+            port:
+              number: 8080

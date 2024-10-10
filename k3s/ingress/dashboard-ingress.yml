@@ -2,7 +2,7 @@
 # kind: Ingress
 # metadata:
 #   name: dashboard-ingress
-#   namespace: kubernetes-dashboard
+#   namespace: dev
 # spec:
 #   rules:
 #   - host: dashboard.ph-rustingheart.dns-dynamic.net
@@ -10,7 +10,7 @@
 #     paths:
 #     - backend:
 #       service:
-#         name: kubernetes-dahboard
+#         name: dahboard
 #         port: 80
 # ---
 # apiVersion: v1

@@ -40,3 +40,21 @@ spec:
       port: 8080
       targetPort: 8080
       # nodePort: 30001
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: petclinic-ingress
+  namespace: dev
+spec:
+  entryPoints:
+    - web
+    - websecure
+  routes:
+    - match: Host(petclinic.ph-rustingheart.dns-dynamic.net)  # Replace with your domain
+      kind: Rule
+      services:
+        - name: petclinic-service
+          port: 8080
+  tls:
+    secretName: petclinic-cert # This will hold your TLS cert managed by Let's Encrypt
