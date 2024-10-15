@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: petclinic-ingress
   namespace: default
-  annotations:
+  annotations: # important !!
     kubernetes.io/ingress.class: "traefik"
     traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
     traefik.ingress.kubernetes.io/tls: "true"  # Enabling TLS

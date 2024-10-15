@@ -47,12 +47,12 @@ ausstehend:
         - terraform apply
         - -> petclinic app is online ( at the moment via NodePort. Implementation via ingress and impl. of databases and else is pending -> under topic of terraform and k3s)
 
-29.09.24:
+2024.09.29
 - NodePort now changed to LoadBalancer with replicas:2
 - webserver still accesible under http://<DTS-IP>:30001 erreichbar
 - trying let's encrypt, not running jet
 
-07.10.24
+2024.10.07
 - terraform:
   - updated main.tf
 - scripts:
@@ -64,29 +64,41 @@ ausstehend:
   - tried and added with ingress-nginx but back to k3s!!
   - deleted in commits again since we dont use it anymore
 
-07.10.24
-- back to old structure but added loadbalancer and ingress:
+2024.10.07
+- back to old structure/last commit from alexstue but added loadbalancer and ingress:
 - k3s:
   - added a traefik-ingress.yml
-  - ingress running on: 
-    - http://petclinic.ph-rustingheart.dns-dynamic.net:30840/
-  - loadbalancer running on: 
-    - http://52.16.155.59:30001/
+  - petclinic service as loadbalancer running on: 
+    - http://petclinic.ph-rustingheart.dns-dynamic.net:30001 with port 8080:30001/TCP
+    - http://52.16.155.59:30001 with port 8080:30001/TCP
 - trying tls now 
 
-still sometimes errors: with lockfiles if they show up i#ll do this:
-sudo rm /var/lib/apt/lists/lock
-sudo rm /var/cache/apt/archives/lock
-sudo rm /var/lib/dpkg/lock-frontend
-sudo apt autoremove
-sudo dpkg --configure -a
+2024.10.10
+- you can reach ingress-traefik/tls as loadbalancer on:
+  - https://petclinic.ph-rustingheart.dns-dynamic.net/ with port 443:30345/TCP
+- database mysql
+  - still shows: Bad Gateway but running as a service already/ is deployed
 
-if .ssh key errors show up:
-- i will delete the know_hosts 
-sudo nano ~/.ssh/known_hosts
-crtl +k # as much as needed 
-crtl + x
-y
+
+
+
+running it on server i still sometimes have errors: 
+lockfile errors:
+-- sudo rm /var/lib/apt/lists/lock
+-- sudo rm /var/cache/apt/archives/lock
+-- sudo rm /var/lib/dpkg/lock-frontend
+-- sudo apt autoremove
+-- sudo dpkg --configure -a
+-- sudo apt update
+
+.ssh key errors:
+
+-- sudo nano ~/.ssh/known_hosts + known_hosts.old 
+delete:
+-- crtl +k # as much as needed 
+-- crtl + x
+-- y
+-- ...
 
 
 

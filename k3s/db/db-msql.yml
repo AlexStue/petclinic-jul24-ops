@@ -1,8 +1,13 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: mysql
+  name: petclinic mysql
   namespace: default
+  annotations: # important binding it to the data, secret ...
+    service.binding/type: "mysql"
+    service.binding/host:
+    service.binding/port: 
+    service.binding: 
 spec:
   serviceName: mysql
   replicas: 1
@@ -17,8 +22,10 @@ spec:
       containers:
       - name: mysql
         image: mysql/mysql-server:8.0
+        imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 3306
+        - containerPort: 8080
+          protocol: TCP
         env:
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
@@ -55,12 +62,27 @@ kind: Service
 metadata:
   name: mysql
   namespace: default
-spec:
-  ports:
-  - port: 3306
-    targetPort: 3306
-  selector:
-    app: mysql
+    spec:
+      containers: 
+        name: mysql
+        image: mysql:8.4
+        ports:
+          - port: 3306
+            targetPort: 3306
+    selector:
+      app: mysql
+  name: postgres
+  namespace: default
+    spec:
+      containers:
+        image: postgres:16.3
+        ports: 
+          - port: 5432
+            targetPort: 5432
+    selector:
+      app: postgres
+        
+
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -69,7 +91,7 @@ metadata:
   namespace: default
 spec:
   accessModes:
-  - ReadWriteOnce
+  - ReadWriteDelete
   resources:
     requests:
       storage: 1Gi
