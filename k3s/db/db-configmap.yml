@@ -51,6 +51,7 @@ data:
     INSERT IGNORE INTO owners VALUES (8, 'Maria', 'Escobito', '345 Maple St.', 'Madison', '6085557683');
     INSERT IGNORE INTO owners VALUES (9, 'David', 'Schroeder', '2749 Blackhawk Trail', 'Madison', '6085559435');
     INSERT IGNORE INTO owners VALUES (10, 'Carlos', 'Estaban', '2335 Independence La.', 'Waunakee', '6085555487');
+    INSERT IGNORE INTO owners VALUES (11, 'Felix', 'Terraform', '1340 Avenue Sql', 'Windy', '1134135487');
     
     INSERT IGNORE INTO pets VALUES (1, 'Leo', '2000-09-07', 1, 1);
     INSERT IGNORE INTO pets VALUES (2, 'Basil', '2002-08-06', 6, 2);
@@ -70,4 +71,4 @@ data:
     INSERT IGNORE INTO visits VALUES (2, 8, '2011-03-04', 'rabies shot');
     INSERT IGNORE INTO visits VALUES (3, 8, '2009-06-04', 'neutered');
     INSERT IGNORE INTO visits VALUES (4, 7, '2008-09-04', 'spayed');
-
+    INSERT IGNORE INTO visits VALUES (4, 7, '2008-09-04', 'denge');
