@@ -5,7 +5,7 @@ metadata:
   namespace: default # or the namespace where your StatefulSet is
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteOnce # or Persistence??
   resources:
     requests:
       storage: 1Gi # Adjust the size as needed

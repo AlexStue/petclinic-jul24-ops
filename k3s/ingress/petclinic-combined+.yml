@@ -25,6 +25,11 @@ spec:
             cpu: "1000m"
         ports:
         - containerPort: 8080 
+        env:
+        - name: SERVER_PORT
+          value: "8080"
+        - name: MYSQL_URL
+          value: "jdbc:mysql://petclinic-db-mysql:3306/petclinic"
 ---
 apiVersion: v1
 kind: Service
