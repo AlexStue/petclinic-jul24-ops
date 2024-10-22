@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: petclinic
-        image: alexstue/jul24-petclinic:latest
+        image: alexstue/jul24-petclinic:1.0
         resources:
           requests:
             memory: "256Mi"
